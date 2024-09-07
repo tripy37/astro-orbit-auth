@@ -10,6 +10,7 @@ import Layout from '../layouts/Layout.astro';
       <p id="wallet-address"></p>
       <p id="wallet-balance"></p>
       <p id="wallet-error" style="color: red;"></p>
+      <a href="/dashboard" id="dashboard-link" style="display: none;">Go to Dashboard</a>
     </div>
     <div id="storage-demo">
       <h2>Storage Demo</h2>
@@ -30,6 +31,7 @@ import Layout from '../layouts/Layout.astro';
   const walletAddressEl = document.getElementById('wallet-address');
   const walletBalanceEl = document.getElementById('wallet-balance');
   const walletErrorEl = document.getElementById('wallet-error');
+  const dashboardLinkEl = document.getElementById('dashboard-link');
   const storageKeyInput = document.getElementById('storage-key') as HTMLInputElement;
   const storageValueInput = document.getElementById('storage-value') as HTMLInputElement;
   const addItemBtn = document.getElementById('add-item');
@@ -44,6 +46,10 @@ import Layout from '../layouts/Layout.astro';
         const balance = await CardanoWallet.getBalance();
         if (walletBalanceEl) walletBalanceEl.textContent = `Balance: ${balance} ADA`;
         if (walletErrorEl) walletErrorEl.textContent = '';
+        if (dashboardLinkEl) dashboardLinkEl.style.display = 'block';
+        
+        // Set a cookie to maintain the session
+        document.cookie = `cardano_address=${address}; path=/; max-age=3600; SameSite=Strict`;
       } catch (error) {
         console.error('Error connecting wallet:', error);
         if (walletErrorEl) walletErrorEl.textContent = error instanceof Error ? error.message : 'An unknown error occurred';

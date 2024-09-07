@@ -55,6 +55,10 @@ class CardanoWallet {
       throw new Error('Failed to fetch wallet balance. Please check your wallet connection and try again.');
     }
   }
+
+  isConnected() {
+    return this.address !== null && this.api !== null;
+  }
 }
 
 export default new CardanoWallet();

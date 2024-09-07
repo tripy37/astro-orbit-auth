@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CardanoWallet from '../components/CardanoWallet.js';
+
+// Server-side authentication check
+let isAuthenticated = false;
+if (Astro.cookies.has('cardano_address')) {
+  isAuthenticated = true;
+}
+
+if (!isAuthenticated) {
+  return Astro.redirect('/');
+}
+---
+
+<Layout title="Dashboard">
+  <main>
+    <h1>Welcome to your Dashboard</h1>
+    <p>This page is only accessible if you're logged in with your Cardano wallet.</p>
+    <div id="walletInfo"></div>
+    <!-- Add more dashboard content here -->
+  </main>
+</Layout>
+
+<script>
+  import CardanoWallet from '../components/CardanoWallet.js';
+
+  async function checkAuthentication() {
+    try {
+      if (!CardanoWallet.isConnected()) {
+        await CardanoWallet.connect();
+      }
+      const address = await CardanoWallet.address;
+      const balance = await CardanoWallet.getBalance();
+      
+      document.getElementById('walletInfo').innerHTML = `
+        <p>Connected Address: ${address}</p>
+        <p>Balance: ${balance} ADA</p>
+      `;
+
+      // Set a cookie to maintain the session
+      document.cookie = `cardano_address=${address}; path=/; max-age=3600; SameSite=Strict`;
+    } catch (error) {
+      console.error('Authentication failed:', error);
+      window.location.href = '/';
+    }
+  }
+
+  checkAuthentication();
+</script>
