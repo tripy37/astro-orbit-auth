@@ -2,37 +2,39 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Astro Cardano OrbitDB">
+<Layout title="Astro Cardano with In-Memory Storage">
   <main>
-    <h1>Welcome to Astro Cardano OrbitDB</h1>
+    <h1>Welcome to Astro Cardano with In-Memory Storage</h1>
     <div id="wallet-info">
       <button id="connect-wallet">Connect Cardano Wallet</button>
       <p id="wallet-address"></p>
       <p id="wallet-balance"></p>
+      <p id="wallet-error" style="color: red;"></p>
     </div>
-    <div id="orbitdb-demo">
-      <h2>OrbitDB Demo</h2>
-      <input type="text" id="db-key" placeholder="Enter key">
-      <input type="text" id="db-value" placeholder="Enter value">
+    <div id="storage-demo">
+      <h2>Storage Demo</h2>
+      <input type="text" id="storage-key" placeholder="Enter key">
+      <input type="text" id="storage-value" placeholder="Enter value">
       <button id="add-item">Add Item</button>
       <button id="get-all-items">Get All Items</button>
-      <div id="db-items"></div>
+      <div id="storage-items"></div>
     </div>
   </main>
 </Layout>
 
 <script>
   import CardanoWallet from '../components/CardanoWallet.js';
-  import OrbitDBManager from '../components/OrbitDB.js';
+  import InMemoryStorage from '../components/OrbitDB.js';
 
   const connectWalletBtn = document.getElementById('connect-wallet');
   const walletAddressEl = document.getElementById('wallet-address');
   const walletBalanceEl = document.getElementById('wallet-balance');
-  const dbKeyInput = document.getElementById('db-key') as HTMLInputElement;
-  const dbValueInput = document.getElementById('db-value') as HTMLInputElement;
+  const walletErrorEl = document.getElementById('wallet-error');
+  const storageKeyInput = document.getElementById('storage-key') as HTMLInputElement;
+  const storageValueInput = document.getElementById('storage-value') as HTMLInputElement;
   const addItemBtn = document.getElementById('add-item');
   const getAllItemsBtn = document.getElementById('get-all-items');
-  const dbItemsEl = document.getElementById('db-items');
+  const storageItemsEl = document.getElementById('storage-items');
 
   if (connectWalletBtn) {
     connectWalletBtn.addEventListener('click', async () => {
@@ -41,22 +43,23 @@ import Layout from '../layouts/Layout.astro';
         if (walletAddressEl) walletAddressEl.textContent = `Address: ${address}`;
         const balance = await CardanoWallet.getBalance();
         if (walletBalanceEl) walletBalanceEl.textContent = `Balance: ${balance} ADA`;
+        if (walletErrorEl) walletErrorEl.textContent = '';
       } catch (error) {
         console.error('Error connecting wallet:', error);
-        alert(error instanceof Error ? error.message : 'An unknown error occurred');
+        if (walletErrorEl) walletErrorEl.textContent = error instanceof Error ? error.message : 'An unknown error occurred';
       }
     });
   }
 
   if (addItemBtn) {
     addItemBtn.addEventListener('click', async () => {
-      const key = dbKeyInput?.value;
-      const value = dbValueInput?.value;
+      const key = storageKeyInput?.value;
+      const value = storageValueInput?.value;
       if (key && value) {
         try {
-          await OrbitDBManager.addItem(key, value);
-          if (dbKeyInput) dbKeyInput.value = '';
-          if (dbValueInput) dbValueInput.value = '';
+          await InMemoryStorage.addItem(key, value);
+          if (storageKeyInput) storageKeyInput.value = '';
+          if (storageValueInput) storageValueInput.value = '';
           alert('Item added successfully');
         } catch (error) {
           console.error('Error adding item:', error);
@@ -71,13 +74,13 @@ import Layout from '../layouts/Layout.astro';
   if (getAllItemsBtn) {
     getAllItemsBtn.addEventListener('click', async () => {
       try {
-        const items = await OrbitDBManager.getAllItems();
-        if (dbItemsEl) {
-          dbItemsEl.innerHTML = '';
+        const items = await InMemoryStorage.getAllItems();
+        if (storageItemsEl) {
+          storageItemsEl.innerHTML = '';
           for (const [key, value] of Object.entries(items)) {
             const itemEl = document.createElement('p');
             itemEl.textContent = `${key}: ${value}`;
-            dbItemsEl.appendChild(itemEl);
+            storageItemsEl.appendChild(itemEl);
           }
         }
       } catch (error) {
@@ -87,12 +90,10 @@ import Layout from '../layouts/Layout.astro';
     });
   }
 
-  // Initialize OrbitDB
-  window.addEventListener('load', () => {
-    OrbitDBManager.init().catch((error) => {
-      console.error('Error initializing OrbitDB:', error);
-      alert('Failed to initialize OrbitDB');
-    });
+  // Initialize In-Memory Storage
+  InMemoryStorage.init().catch((error) => {
+    console.error('Error initializing In-Memory Storage:', error);
+    alert('Failed to initialize In-Memory Storage');
   });
 </script>
 
@@ -110,7 +111,7 @@ import Layout from '../layouts/Layout.astro';
     text-align: center;
     margin-bottom: 1em;
   }
-  #wallet-info, #orbitdb-demo {
+  #wallet-info, #storage-demo {
     margin-bottom: 2rem;
   }
   input, button {
