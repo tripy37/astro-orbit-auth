@@ -1,54 +1,77 @@
-# Astro Starter Kit: Basics
+# Astro Cardano OrbitDB Project
 
-```sh
-npm create astro@latest -- --template basics
-```
+This project demonstrates the integration of Astro, Cardano blockchain, and OrbitDB to create a decentralized application. It provides a simple interface for connecting a Cardano wallet and interacting with a decentralized database using OrbitDB.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## Features
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- Astro-based static site generation
+- Cardano wallet integration
+- OrbitDB for decentralized data storage
+- Simple key-value pair storage and retrieval
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+## Prerequisites
 
-## 🚀 Project Structure
+- Node.js (v14 or later recommended)
+- npm (comes with Node.js)
+- A Cardano wallet browser extension (e.g., Nami)
 
-Inside of your Astro project, you'll see the following folders and files:
+## Installation
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── components/
-│   │   └── Card.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+1. Clone the repository:
+   ```
+   git clone <repository-url>
+   cd astro-orbit-auth
+   ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Running the Project
 
-Any static assets, like images, can be placed in the `public/` directory.
+1. Start the development server:
+   ```
+   npm run dev
+   ```
 
-## 🧞 Commands
+2. Open a web browser and navigate to `http://localhost:4321`
 
-All commands are run from the root of the project, from a terminal:
+## Project Structure
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+- `src/components/CardanoWallet.js`: Handles Cardano wallet integration
+- `src/components/OrbitDB.js`: Manages OrbitDB operations
+- `src/pages/index.astro`: Main page with wallet connection and OrbitDB demo
+- `src/layouts/Layout.astro`: Layout component for consistent styling
 
-## 👀 Want to learn more?
+## Usage
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+1. Connect Cardano Wallet:
+   - Click the "Connect Cardano Wallet" button
+   - Approve the connection in your Cardano wallet extension
+
+2. OrbitDB Demo:
+   - Enter a key and value in the input fields
+   - Click "Add Item" to store the key-value pair
+   - Click "Get All Items" to retrieve and display all stored items
+
+## Technologies Used
+
+- [Astro](https://astro.build/): Modern static site generator
+- [Cardano](https://cardano.org/): Blockchain platform
+- [OrbitDB](https://orbitdb.org/): Peer-to-peer database for the decentralized web
+- [IPFS](https://ipfs.io/): Distributed file system, used by OrbitDB
+
+## Notes
+
+- This project is a demonstration and may require further development for production use.
+- Ensure you have a Cardano wallet extension installed in your browser for full functionality.
+- You may see console warnings related to IPFS, which are generally not critical for basic functionality.
+
+## Contributing
+
+Contributions, issues, and feature requests are welcome. Feel free to check [issues page](https://github.com/yourusername/astro-orbit-auth/issues) if you want to contribute.
+
+## License
+
+This project is [MIT](https://choosealicense.com/licenses/mit/) licensed.
