@@ -28,56 +28,64 @@ import Layout from '../layouts/Layout.astro';
   const connectWalletBtn = document.getElementById('connect-wallet');
   const walletAddressEl = document.getElementById('wallet-address');
   const walletBalanceEl = document.getElementById('wallet-balance');
-  const dbKeyInput = document.getElementById('db-key');
-  const dbValueInput = document.getElementById('db-value');
+  const dbKeyInput = document.getElementById('db-key') as HTMLInputElement;
+  const dbValueInput = document.getElementById('db-value') as HTMLInputElement;
   const addItemBtn = document.getElementById('add-item');
   const getAllItemsBtn = document.getElementById('get-all-items');
   const dbItemsEl = document.getElementById('db-items');
 
-  connectWalletBtn.addEventListener('click', async () => {
-    try {
-      const address = await CardanoWallet.connect();
-      walletAddressEl.textContent = `Address: ${address}`;
-      const balance = await CardanoWallet.getBalance();
-      walletBalanceEl.textContent = `Balance: ${balance} ADA`;
-    } catch (error) {
-      console.error('Error connecting wallet:', error);
-      alert(error.message);
-    }
-  });
-
-  addItemBtn.addEventListener('click', async () => {
-    const key = dbKeyInput.value;
-    const value = dbValueInput.value;
-    if (key && value) {
+  if (connectWalletBtn) {
+    connectWalletBtn.addEventListener('click', async () => {
       try {
-        await OrbitDBManager.addItem(key, value);
-        dbKeyInput.value = '';
-        dbValueInput.value = '';
-        alert('Item added successfully');
+        const address = await CardanoWallet.connect();
+        if (walletAddressEl) walletAddressEl.textContent = `Address: ${address}`;
+        const balance = await CardanoWallet.getBalance();
+        if (walletBalanceEl) walletBalanceEl.textContent = `Balance: ${balance} ADA`;
       } catch (error) {
-        console.error('Error adding item:', error);
-        alert(error.message);
+        console.error('Error connecting wallet:', error);
+        alert(error instanceof Error ? error.message : 'An unknown error occurred');
       }
-    } else {
-      alert('Please enter both key and value');
-    }
-  });
+    });
+  }
 
-  getAllItemsBtn.addEventListener('click', async () => {
-    try {
-      const items = await OrbitDBManager.getAllItems();
-      dbItemsEl.innerHTML = '';
-      for (const [key, value] of Object.entries(items)) {
-        const itemEl = document.createElement('p');
-        itemEl.textContent = `${key}: ${value}`;
-        dbItemsEl.appendChild(itemEl);
+  if (addItemBtn) {
+    addItemBtn.addEventListener('click', async () => {
+      const key = dbKeyInput?.value;
+      const value = dbValueInput?.value;
+      if (key && value) {
+        try {
+          await OrbitDBManager.addItem(key, value);
+          if (dbKeyInput) dbKeyInput.value = '';
+          if (dbValueInput) dbValueInput.value = '';
+          alert('Item added successfully');
+        } catch (error) {
+          console.error('Error adding item:', error);
+          alert(error instanceof Error ? error.message : 'An unknown error occurred');
+        }
+      } else {
+        alert('Please enter both key and value');
       }
-    } catch (error) {
-      console.error('Error getting items:', error);
-      alert(error.message);
-    }
-  });
+    });
+  }
+
+  if (getAllItemsBtn) {
+    getAllItemsBtn.addEventListener('click', async () => {
+      try {
+        const items = await OrbitDBManager.getAllItems();
+        if (dbItemsEl) {
+          dbItemsEl.innerHTML = '';
+          for (const [key, value] of Object.entries(items)) {
+            const itemEl = document.createElement('p');
+            itemEl.textContent = `${key}: ${value}`;
+            dbItemsEl.appendChild(itemEl);
+          }
+        }
+      } catch (error) {
+        console.error('Error getting items:', error);
+        alert(error instanceof Error ? error.message : 'An unknown error occurred');
+      }
+    });
+  }
 
   // Initialize OrbitDB
   window.addEventListener('load', () => {
